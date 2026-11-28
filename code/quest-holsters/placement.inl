@@ -41,7 +41,7 @@ bool readLayout(const std::filesystem::path& path,Layout& result){
 void loadPlacement(){
  centers=defaultLayout();layoutFile.clear();wchar_t base[32768]{},choice[4]{};
  auto length=GetEnvironmentVariableW(L"LOCALAPPDATA",base,32768);
- if(length&&length<32768){layoutFile=std::filesystem::path(base)/L"GTAVXR-QuestHolsters"/L"positions-shoulders-v2.txt";
+ if(length&&length<32768){layoutFile=std::filesystem::path(base)/L"GTAVXR-QuestHolsters-Beta"/L"positions-shoulders-v2.txt";
  if(!readLayout(layoutFile,centers)){
  Layout old;if(readLayout(layoutFile.parent_path()/L"positions-v1.txt",old)){
  centers[0]=old[0];centers[1]=old[1];}

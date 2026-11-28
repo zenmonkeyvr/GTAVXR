@@ -20,7 +20,7 @@ public sealed partial class QuestInventory : Script {
     RouteSlot route;
     readonly uint[] saved=new uint[4];
     readonly string[] slots={"Left hip","Right hip","Left shoulder","Right shoulder"};
-    readonly string saveDir=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"GTAVXR-QuestHolsters");
+    readonly string saveDir=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"GTAVXR-QuestHolsters-Beta");
     bool slowed;
     float previousScale;
     const float BrowsingScale=.25f;

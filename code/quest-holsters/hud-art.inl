@@ -5,8 +5,23 @@ const std::array<HudIcon,weaponCount>& hudIcons(){
     HMODULE module=nullptr;GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS|GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
         reinterpret_cast<LPCWSTR>(&hudIcons),&module);
     auto res=FindResourceW(module,MAKEINTRESOURCEW(101),MAKEINTRESOURCEW(10));
-    if(!res)return result;
-    auto size=SizeofResource(module,res);auto p=static_cast<const unsigned char*>(LockResource(LoadResource(module,res)));
+    const unsigned char* p=nullptr;
+    size_t size=0;
+    static std::vector<unsigned char> localArt;
+    if(res){
+       size=SizeofResource(module,res);p=static_cast<const unsigned char*>(LockResource(LoadResource(module,res)));
+    }else{
+       wchar_t path[32768];
+       DWORD length=GetModuleFileNameW(module,path,32768);
+       if(!length||length>=32768)return result;
+       std::ifstream file(std::filesystem::path(path).parent_path()/L"weapons.icons",std::ios::binary|std::ios::ate);
+       if(!file)return result;
+       auto bytes=file.tellg();
+       if(bytes<8||bytes>8*1024*1024)return result;
+       localArt.resize(static_cast<size_t>(bytes));file.seekg(0);
+       if(!file.read(reinterpret_cast<char*>(localArt.data()),bytes))return result;
+       p=localArt.data();size=localArt.size();
+    }
     if(!p||size<8||memcmp(p,"GWH1",4))return result;
     unsigned count;memcpy(&count,p+4,4);auto end=p+size;p+=8;
     for(unsigned n=0;n<count&&end-p>=8;n++){
